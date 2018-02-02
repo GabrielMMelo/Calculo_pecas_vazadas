@@ -4,8 +4,6 @@ import sys
 import math
 import copy
 
-class Peca:
-
 # Modelo da estrutura de dados. Cada indice de 'formas' tera, na primeira posicao, a quantidade de vertices
 # da sua forma, seguida (nas posicoes seguintes), das coordenadas
 # formas = [[qt_vertices1, coordenada1_v_1, coordenada1_v_2, coordenada1_v_3,...],[qt_vertices2, coordenada2_v_1, coordenada2_v_2],...]
@@ -18,6 +16,8 @@ class Peca:
 #	 Cada forma tera:
 #		- numero de vertices
 #		- coordenadas dos vertices
+
+class Peca:
 
 	def __init__(self, num_vertices, num_formas, formas): 
 		self.formas = formas
@@ -44,13 +44,17 @@ class Peca:
 				for coord in range(1, int(f[0])+1):
 					if coord != int(f[0]):
 						c1 = f[coord].split()
+						c1 = [float(i) for i in c1]
 						c2 = f[coord+1].split()
-						area_sub_total += (float(c1[0])*float(c2[1])) - (float(c1[1])*float(c2[0])) 
+						c2 = [float(i) for i in c2]
+						area_sub_total += (c1[0]*c2[1]) - (c1[1]*c2[0]) 
 
 					else:
 						c1 = f[coord].split()
+						c1 = [float(i) for i in c1]
 						c2 = f[1].split()
-						area_sub_total += (float(c1[0])*float(c2[1])) - (float(c1[1])*float(c2[0])) 
+						c2 = [float(i) for i in c2]
+						area_sub_total += (c1[0]*c2[1]) - (c1[1]*c2[0]) 
 				area_total = area_sub_total
 
 			else:
@@ -58,16 +62,21 @@ class Peca:
 				for coord in range(1, int(f[0])+1):
 					if coord != int(f[0]):
 						c1 = f[coord].split()
+						c1 = [float(i) for i in c1]
 						c2 = f[coord+1].split()
-						area_sub_total += (float(c1[0])*float(c2[1])) - (float(c1[1])*float(c2[0])) 
+						c2 = [float(i) for i in c2]
+						area_sub_total += (c1[0]*c2[1]) - (c1[1]*c2[0]) 
 					else:
 						c1 = f[coord].split()
+						c1 = [float(i) for i in c1]
 						c2 = f[1].split()
-						area_sub_total += (float(c1[0])*float(c2[1])) - (float(c1[1])*float(c2[0])) 
+						c2 = [float(i) for i in c2]
+						area_sub_total += (c1[0]*c2[1]) - (c1[1]*c2[0]) 
 				area_total -= abs(area_sub_total)
-		return float(area_total/2)
+		return area_total/2
 	
-	def calcula_centro_gravidade(self):
+
+	def calcula_centro_gravidade(self, area):
 		x = 0
 		y = 0
 		x_sub = 0
@@ -82,48 +91,138 @@ class Peca:
 				for coord in range(1, int(f[0])+1):
 					if coord != int(f[0]):
 						c1 = f[coord].split()
+						c1 = [float(i) for i in c1]
 						c2 = f[coord+1].split()
-						y = (float(c1[1])+float(c2[1]))*((float(c1[0])*float(c2[1]) ) - (float(c2[0])*float(c1[1])))
-						x = (float(c1[0])+float(c2[0]))*((float(c1[0])*float(c2[1]) ) - (float(c2[0])*float(c1[1])))
+						c2 = [float(i) for i in c2]
+						y = (c1[1]+c2[1])*((c1[0]*c2[1]) - (c2[0]*c1[1]))
+						x = (c1[0]+c2[0])*((c1[0]*c2[1]) - (c2[0]*c1[1]))
 						y_maior += y
 						x_maior += x
 
 					else:
 						c1 = f[coord].split()
+						c1 = [float(i) for i in c1]
 						c2 = f[1].split()
-						y = (float(c1[1])+float(c2[1]))*((float(c1[0])*float(c2[1]) ) - (float(c2[0])*float(c1[1])))
-						x = (float(c1[0])+float(c2[0]))*((float(c1[0])*float(c2[1]) ) - (float(c2[0])*float(c1[1])))
+						c2 = [float(i) for i in c2]
+						y = (c1[1]+c2[1])*((c1[0]*c2[1]) - (c2[0]*c1[1]))
+						x = (c1[0]+c2[0])*((c1[0]*c2[1]) - (c2[0]*c1[1]))
 						y_maior += y
 						x_maior += x 
-						y_maior = abs(y_maior)
-						x_maior = abs(x_maior)
+						#y_maior = abs(y_maior)		#	Usando o abs(), o resultado nunca terminaria negativo
+						#x_maior = abs(x_maior)		#	como o correto
 
 			else:
-				x_sub = 0
-				y_sub = 0
+				x_sub = 0.0
+				y_sub = 0.0
 				for coord in range(1, int(f[0])+1):
 					if coord != int(f[0]):
 						c1 = f[coord].split()
+						c1 = [float(i) for i in c1]
 						c2 = f[coord+1].split()
-						y = (float(c1[1])+float(c2[1]))*((float(c1[0])*float(c2[1]) ) - (float(c2[0])*float(c1[1])))
-						x = (float(c1[0])+float(c2[0]))*((float(c1[0])*float(c2[1]) ) - (float(c2[0])*float(c1[1])))
+						c2 = [float(i) for i in c2]
+						y = (c1[1]+c2[1])*((c1[0]*c2[1]) - (c2[0]*c1[1]))
+						x = (c1[0]+c2[0])*((c1[0]*c2[1]) - (c2[0]*c1[1]))
 						y_sub += y
 						x_sub += x
 
 					else:
 						c1 = f[coord].split()
+						c1 = [float(i) for i in c1]
 						c2 = f[1].split()
-						y = (float(c1[1])+float(c2[1]))*((float(c1[0])*float(c2[1]) ) - (float(c2[0])*float(c1[1])))
-						x = (float(c1[0])+float(c2[0]))*((float(c1[0])*float(c2[1]) ) - (float(c2[0])*float(c1[1])))
+						c2 = [float(i) for i in c2]
+						y = (c1[1]+c2[1])*((c1[0]*c2[1]) - (c2[0]*c1[1]))
+						x = (c1[0]+c2[0])*((c1[0]*c2[1]) - (c2[0]*c1[1]))
 						y_sub += y
 						x_sub += x 
-						y_sub = abs(y_sub)
-						x_sub = abs(x_sub)
-						y_maior -= y_sub
-						x_maior -= x_sub
-		return y_maior, x_maior
-	
-		
+						#y_sub = abs(y_sub)
+						#x_sub = abs(x_sub)					
+						y_maior += y_sub
+						x_maior += x_sub
+						
+		return  x_maior/(6*area), y_maior/(6*area)	
+
+	def calcula_momento_inercia(self, cgx, cgy):
+		IX_sub = 0
+		IY_sub = 0
+		IX = 0
+		IY = 0
+		for f in self.formas:
+			IX_sub = 0
+			IY_sub = 0
+			for coord in range(1, int(f[0])+1):
+				if coord != int(f[0]):
+					c1 = f[coord].split()
+					c1 = [float(i) for i in c1]
+					c1[0] -= cgx 
+					c1[1] -= cgy
+					c2 = f[coord+1].split()
+					c2 = [float(i) for i in c2]
+					c2[0] -= cgx 
+					c2[1] -= cgy
+
+					IY_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[0] ** 2 + (c1[0] * c2[0]) + (c2[0]**2))
+					IX_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[1] ** 2 + (c1[1] * c2[1]) + (c2[1]**2))
+					IY += IY_sub 
+					IX += IX_sub
+
+				else:
+					c1 = f[coord].split()
+					c1 = [float(i) for i in c1]
+					c1[0] -= cgx 
+					c1[1] -= cgy
+					c2 = f[1].split()
+					c2 = [float(i) for i in c2]
+					c2[0] -= cgx 
+					c2[1] -= cgy
+
+					IY_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[0] ** 2 + (c1[0] * c2[0]) + (c2[0]**2))
+					IX_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[1] ** 2 + (c1[1] * c2[1]) + (c2[1]**2))
+					IY += IY_sub 
+					IX += IX_sub
+					
+		return IX/12, IY/12
+			
+	def calcula_produto_inercia(self, cgx, cgy):
+		IX_sub = 0
+		IY_sub = 0
+		IX = 0
+		IY = 0
+		for f in self.formas:
+			IX_sub = 0
+			IY_sub = 0
+			for coord in range(1, int(f[0])+1):
+				if coord != int(f[0]):
+					c1 = f[coord].split()
+					c1 = [float(i) for i in c1]
+					c1[0] -= cgx 
+					c1[1] -= cgy
+					c2 = f[coord+1].split()
+					c2 = [float(i) for i in c2]
+					c2[0] -= cgx 
+					c2[1] -= cgy
+
+					IY_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[0] ** 2 + (c1[0] * c2[0]) + (c2[0]**2))
+					IX_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[1] ** 2 + (c1[1] * c2[1]) + (c2[1]**2))
+					IY += IY_sub 
+					IX += IX_sub
+
+				else:
+					c1 = f[coord].split()
+					c1 = [float(i) for i in c1]
+					c1[0] -= cgx 
+					c1[1] -= cgy
+					c2 = f[1].split()
+					c2 = [float(i) for i in c2]
+					c2[0] -= cgx 
+					c2[1] -= cgy
+
+					IY_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[0] ** 2 + (c1[0] * c2[0]) + (c2[0]**2))
+					IX_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[1] ** 2 + (c1[1] * c2[1]) + (c2[1]**2))
+					IY += IY_sub 
+					IX += IX_sub
+					
+		return IX/12, IY/12
+
 
 def calcula_dist(v1,v2):
 	aux = v1.split()
@@ -167,6 +266,13 @@ if __name__ == "__main__":
 	lista_linhas = ler_arquivo()
 	num_vertices, num_formas, formas = gera_caso(lista_linhas)
 	p = Peca(num_vertices, num_formas, formas)
-	print p.calcula_perimetro()
-	print p.calcula_area()
-	print p.calcula_centro_gravidade()
+	perimetro =  p.calcula_perimetro()
+	print '\n' + "Perimetro: " + str(perimetro) + '\n'
+	area =  p.calcula_area()
+	print "Area: " + str(area) + '\n'
+	cgx,cgy = p.calcula_centro_gravidade(area)
+	print "C.G. em x: " + str(cgx) + '\n'
+	print "C.G. em y: " + str(cgy) + '\n'
+	IX,IY = p.calcula_momento_inercia(cgx,cgy)
+	print "Momento de inercia em x: " + str(IX) + '\n'
+	print "Momento de inercia em y: " + str(IY) + '\n'

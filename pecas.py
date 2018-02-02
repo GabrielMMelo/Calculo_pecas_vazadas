@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
 import sys
 import math as m
-import cmath as cm
 import copy
 
 # Modelo da estrutura de dados. Cada indice de 'formas' tera, na primeira posicao, a quantidade de vertices
@@ -18,6 +18,8 @@ import copy
 #	 Cada forma tera:
 #		- numero de vertices
 #		- coordenadas dos vertices
+global tab 
+tab = "					"
 
 class Peca:
 
@@ -215,6 +217,10 @@ class Peca:
 
 		return I_max, I_min
 
+	def calcula_momento_polar(self, IX, IY):
+		Ip = IX + IY
+		return  Ip
+
 	def calcula_produto_inercia(self, cgx, cgy):
 		IXY_sub = 0
 		IXY = 0
@@ -291,17 +297,42 @@ def ler_arquivo():
 	arquivo.close()
 	return lista_linhas 
 
+def escrever_ativo(Perimetro, Area, Cgx, Cgy, IX, IY, IXY, Imax, Imin, Ip, Teta1, Teta2, Kx, Ky, Kmax, Kmin):
+	arquivo = open("saida.out", 'w')
+	arquivo.write("ALUNO:" + str(tab) + "PEDRO HENRIQUE MORI \n")
+	arquivo.write("MATRÍCULA:" + str(tab) + "2015110643 \n \n \n")
+	arquivo.write("Área da figura: " +  str(tab) + str(Area) + " cm2 \n")
+	arquivo.write("Perímetro da figura: " + str(tab) + str(Perimetro) + " cm \n")
+	arquivo.write("Coord. X do C.G.: " + str(tab) + str(Cgx) + " cm \n")
+	arquivo.write("Coord. Y do C.G.: " + str(tab) + str(Cgy) + " cm \n")
+	arquivo.write("Momento de inercia, Ix: " + str(tab) + str(IX) + " cm4 \n")
+	arquivo.write("Momento de inercia, Iy: " + str(tab) + str(IY) + " cm4 \n")
+	arquivo.write("Produto de inercia, Ixy: " + str(tab) + str(IXY) + " cm4 \n")
+	arquivo.write("Momento polar de inercia, Ip: " + str(tab) + str(Ip) + " cm4 \n")
+	arquivo.write("Momento de inercia mínimo, Imin: " + str(tab) + str(Imin) + " cm4 \n")
+	arquivo.write("Momento de inercia máximo, Imax: " + str(tab) + str(Imax) + " cm4 \n")
+	arquivo.write("Ângulo incl. eixo princ. - Teta1: " + str(tab) + str(Teta1) + " cm \n")
+	arquivo.write("Ângulo incl. eixo princ. - Teta2: " + str(tab) + str(Teta2) + " cm \n")
+	arquivo.write("Raio de giração, Rmin: " + str(tab) + str(Kmin) + " cm \n") 	
+	arquivo.write("Raio de giração, Rmax: " + str(tab) + str(Kmax) + " cm \n")
+	arquivo.write("Raio de giração, Rx: " + str(tab) + str(Kx) + " cm \n")
+	arquivo.write("Raio de giração, Ry: " + str(tab) + str(Ky) + " cm \n")
+
 # Auxiliar para criacao do objeto 'peca'
 def gera_peca(lista_linhas):
-	num_vertices = int(lista_linhas[0].replace('\n', ''));
-	num_formas = int(lista_linhas[1].replace('\n', ''));
+	num_formas = int(lista_linhas[0].replace('\n', ''));
+	num_vertices = int(lista_linhas[1].replace('\n', ''));
 	formas = []
-	for i in range(2, num_formas+2):
-		formas.append([lista_linhas[i].replace('\n', '')])
+	
+	if num_formas != 1:
+		for i in range(2, num_formas+2):
+			formas.append([lista_linhas[i].replace('\n', '')])
+	else:
+		i = 1
+		formas.append([num_vertices])
 	coordenadas = []
 	for linha in lista_linhas[i+1:]:
 		coordenadas.append(linha.replace('\n',''))
-
 	count = 0
 	for f in formas:
 		for i in range(0,int(f[0])):
@@ -309,7 +340,6 @@ def gera_peca(lista_linhas):
 			count +=1
 
 	return num_vertices, num_formas, formas
-
 
 
 if __name__ == "__main__":
@@ -325,9 +355,9 @@ if __name__ == "__main__":
 	#		   #
 	
 	Perimetro =  p.calcula_perimetro()
-	print '\n' + "Perimetro: " + str(Perimetro) + '\n'
+	print '\n' + "Perímetro: " + str(Perimetro) + '\n'
 	Area =  p.calcula_area()
-	print "Area: " + str(Area) + '\n'
+	print "Área: " + str(Area) + '\n'
 	Cgx,Cgy = p.calcula_centro_gravidade(Area)
 	print "C.G. em x: " + str(Cgx) + '\n'
 	print "C.G. em y: " + str(Cgy) + '\n'
@@ -337,14 +367,16 @@ if __name__ == "__main__":
 	IXY = p.calcula_produto_inercia(Cgx, Cgy)
 	print "Produto de inercia: " + str(IXY) + '\n'
 	Imax, Imin = p.calcula_momento_inercia_maxmin(IX, IY, IXY)
-	print "Momento de inercias maximo: " + str(Imax) + '\n'
-	print "Momento de inercias maximo: " + str(Imin) + '\n'
+	print "Momento de inercias mínimo: " + str(Imin) + '\n'
+	print "Momento de inercias máximo: " + str(Imax) + '\n'
+	Ip = p.calcula_momento_polar(IX, IY)
+	print "Momento polar de inercia: " + str(Ip) + '\n'
 	Teta1, Teta2 = p.calcula_angulo_inclinacao(IX, IY, IXY)
-	print "Angulo de inclinacao eixo principal - Teta1: " + str(Teta1) + '\n'
-	print "Angulo de inclinacao eixo principal - Teta2: " + str(Teta2) + '\n'
+	print "Ângulo de inclinação eixo principal - Teta1: " + str(Teta1) + '\n'
+	print "Ângulo de inclinação eixo principal - Teta2: " + str(Teta2) + '\n'
 	Kx, Ky, Kmax, Kmin = p.calcula_raio_giracao(Area, IX, IY, Imax, Imin)
-	print "Raio de giracao, Kx: " + str(Kx) + '\n'
-	print "Raio de giracao, Ky: " + str(Ky) + '\n'
-	print "Raio maximo de giracao: " + str(Kmax) + '\n'
-	print "Raio minimo de giracao: " + str(Kmin) + '\n'
-	
+	print "Raio de giração, Kx: " + str(Kx) + '\n'
+	print "Raio de giração, Ky: " + str(Ky) + '\n'
+	print "Raio minimo de giração: " + str(Kmin) + '\n'
+	print "Raio máximo de giração: " + str(Kmax) + '\n'
+	escrever_ativo(Perimetro, Area, Cgx, Cgy, IX, IY, IXY, Imax, Imin, Ip, Teta1, Teta2, Kx, Ky, Kmax, Kmin)

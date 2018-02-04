@@ -202,7 +202,6 @@ class Peca:
 					c2 = [float(i) for i in c2]
 					c2[0] -= cgx 
 					c2[1] -= cgy
-
 					IY_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[0] ** 2 + (c1[0] * c2[0]) + (c2[0]**2))
 					IX_sub = ((c1[0] * c2[1]) - (c2[0] * c1[1])) * (c1[1] ** 2 + (c1[1] * c2[1]) + (c2[1]**2))
 					IY += IY_sub 
@@ -226,8 +225,7 @@ class Peca:
 		IXY = 0
 		# Itera por todas as formas
 		for f in self.formas:
-			IX_sub = 0
-			IY_sub = 0
+
 			# Percorre todas as coordenadas da forma, aplicando a formula
 			for coord in range(1, int(f[0])+1):
 				# Tratamento para a ultima coordenada da lista
@@ -317,6 +315,7 @@ def escrever_ativo(Perimetro, Area, Cgx, Cgy, IX, IY, IXY, Imax, Imin, Ip, Teta1
 	arquivo.write("Raio de giração, Rmax: " + str(tab) + str(Kmax) + " cm \n")
 	arquivo.write("Raio de giração, Rx: " + str(tab) + str(Kx) + " cm \n")
 	arquivo.write("Raio de giração, Ry: " + str(tab) + str(Ky) + " cm \n")
+	arquivo.close()
 
 # Auxiliar para criacao do objeto 'peca'
 def gera_peca(lista_linhas):
